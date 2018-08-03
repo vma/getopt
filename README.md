@@ -10,7 +10,6 @@ use the following import paths:
 	"github.com/vma/getopt"
 ```
 
-This README describes version 2 of the package, which has a simplified API.
 This package is forked from github.com/pborman/getopt/v2
 
 ## Usage
