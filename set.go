@@ -54,7 +54,7 @@ func NewSet() *Set {
 	s := &Set{
 		shortOptions: make(map[rune]*option),
 		longOptions:  make(map[string]*option),
-		parameters:   "[parameters ...]",
+		parameters:   "[args ...]",
 	}
 	s.usage = func() {
 		s.PrintUsage(stderr)
@@ -86,8 +86,19 @@ func PrintUsage(w io.Writer) { CommandLine.PrintUsage(w) }
 func Usage() { CommandLine.usage() }
 
 // Parse calls Parse in the default option set with the command line arguments
-// found in os.Args.
-func Parse() { CommandLine.Parse(os.Args) }
+// found in os.Args. It adds the default help flags (-h and --help) if neither
+// is already defined by the caller.
+func Parse() {
+	var h *bool
+	if Lookup('h') == nil && Lookup("help") == nil {
+		h = BoolLong("help", 'h', "print (this) help message")
+	}
+	CommandLine.Parse(os.Args)
+	if h != nil && *h {
+		Usage()
+		exit(0)
+	}
+}
 
 // Getops returns the result of calling Getop in the default option set with the
 // command line arguments found in os.Args.  The fn function, which may be nil,
@@ -183,13 +194,18 @@ func Lookup(name interface{}) Option {
 // Lookup returns the Option associated with name in s.  Name should either be
 // a rune (the short name) or a string (the long name).
 func (s *Set) Lookup(name interface{}) Option {
+	var ok bool
+	var opt *option
 	switch v := name.(type) {
 	case rune:
-		return s.shortOptions[v]
+		opt, ok = s.shortOptions[v]
 	case int:
-		return s.shortOptions[rune(v)]
+		opt, ok = s.shortOptions[rune(v)]
 	case string:
-		return s.longOptions[v]
+		opt, ok = s.longOptions[v]
+	}
+	if ok {
+		return opt
 	}
 	return nil
 }
