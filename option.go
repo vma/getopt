@@ -7,6 +7,7 @@ package getopt
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -104,6 +105,16 @@ func (o *option) usageName() string {
 		return n + "=" + o.name
 	}
 	return n + " " + o.name
+}
+
+func (o *option) defaultValue() string {
+	if o.flag || o.defval == "" {
+		return ""
+	}
+	if _, err := strconv.Atoi(o.defval); err == nil {
+		return fmt.Sprintf("(default: %v)", o.defval)
+	}
+	return fmt.Sprintf("(default: %q)", o.defval)
 }
 
 // sortName returns the name to sort the option on.

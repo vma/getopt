@@ -10,7 +10,10 @@ use the following import paths:
 	"github.com/vma/getopt"
 ```
 
-This package is forked from github.com/pborman/getopt/v2
+This package is forked from github.com/pborman/getopt/v2 with the following changes:
+
+- Add default help flags (-h and --help) if not defined by user
+- Print flag non-null default value in usage
 
 ## Usage
 

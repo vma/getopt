@@ -315,6 +315,12 @@ func (s *Set) PrintOptions(w io.Writer) {
 	for _, opt := range s.options {
 		if opt.uname != "" {
 			opt.help = strings.TrimSpace(opt.help)
+			defval := opt.defaultValue()
+			if len(opt.help)+len(defval) <= DisplayWidth-HelpColumn {
+				opt.help += " " + defval
+			} else {
+				opt.help += "\n" + defval
+			}
 			if len(opt.help) == 0 {
 				fmt.Fprintf(w, " %s\n", opt.uname)
 				continue
