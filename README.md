@@ -3,17 +3,20 @@
 Package getopt provides traditional getopt processing for implementing
 commands that use traditional command lines.  The standard Go flag package
 cannot be used to write a program that parses flags the way ls or ssh does,
-for example.  There are two versions, v1 and v2, both named getopt, that
-use the following import paths:
+for example.
+
+This package is forked from [github.com/pborman/getopt/v2](https://github.com/pborman/getopt/tree/master/v2) with the following changes:
+
+- Default help flags (-h and --help) are added if not defined by user.
+- Flag non-null default values are printed in usage like in `flags` package.
+
+## Installation
+
+Installation can be done as usual:
 
 ```
-	"github.com/vma/getopt"
+$ go get github.com/vma/getopt
 ```
-
-This package is forked from github.com/pborman/getopt/v2 with the following changes:
-
-- Add default help flags (-h and --help) if not defined by user
-- Print flag non-null default value in usage
 
 ## Usage
 
@@ -26,7 +29,6 @@ Typical usage:
 
 ```
 	Declare flags and have getopt return pointers to the values.
-	helpFlag := getopt.Bool('?', "display help")
 	cmdFlag := getopt.StringLong("command", 'c', "default", "the command)
 
 	Declare flags against existing variables.
@@ -196,11 +198,11 @@ appropriate type.
 A pointer to any type that implements the Value interface may be passed to
 Flag or FlagLong.
 
-## VALUEHELP
+## valuehelp
 
 All non-flag options are created with a "valuehelp" as the last parameter.
 Valuehelp should be 0, 1, or 2 strings.  The first string, if provided, is
-the usage message for the option.  If the second string, if provided, is the
+the usage message for the option.  The second string, if provided, is the
 name to use for the value when displaying the usage.  If not provided the
 term "value" is assumed.
 
