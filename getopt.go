@@ -388,11 +388,17 @@ func breakup(s string, max int) []string {
 // error, Parse displays the error message as well as a usage message on
 // standard error and then exits the program.
 func (s *Set) Parse(args []string) {
+	s.parsed = true
 	if err := s.Getopt(args, nil); err != nil {
 		fmt.Fprintln(stderr, err)
 		s.usage()
 		exit(1)
 	}
+}
+
+// Parsed reports whether s.Parse has been called.
+func (s *Set) Parsed() bool {
+	return s.parsed
 }
 
 // Parse uses Getopt to parse args using the options set for s.  The first

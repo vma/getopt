@@ -29,6 +29,7 @@ const (
 type Set struct {
 	stateMu sync.Mutex
 	state   State
+	parsed  bool
 
 	// args are the parameters remaining after parsing the optoins.
 	args []string
@@ -98,6 +99,11 @@ func Parse() {
 		Usage()
 		exit(0)
 	}
+}
+
+// Parsed reports whether the command-line flags have been parsed.
+func Parsed() bool {
+	return CommandLine.Parsed()
 }
 
 // Getops returns the result of calling Getop in the default option set with the
