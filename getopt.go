@@ -241,7 +241,10 @@ func (s *Set) PrintUsage(w io.Writer) {
 // parameters, if any, are not included.
 func (s *Set) UsageLine() string {
 	sort.Sort(s.options)
-	flags := ""
+	flags, indent := "", ""
+	for len(indent) < len(s.program)+len("Usage:")+2 {
+		indent += " "
+	}
 
 	// Build up the list of short flag names and also compute
 	// how to display the option in the longer help listing.
@@ -289,11 +292,21 @@ func (s *Set) UsageLine() string {
 		}
 		opts = append(opts, flags)
 	}
-	flags = strings.Join(opts, "] [")
-	if flags != "" {
-		flags = "[" + flags + "]"
+	usage, ulen := "", 0
+	for i, o := range opts {
+		opt := "[" + o + "]"
+		ulen += len(opt)
+		if ulen > DisplayWidth-len(indent) {
+			opt = "\n" + indent + opt
+			ulen = len(opt)
+		}
+		if i != len(opts)-1 {
+			opt += " "
+			ulen++
+		}
+		usage += opt
 	}
-	return flags
+	return usage
 }
 
 // PrintOptions prints the list of options in s to w.
