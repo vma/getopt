@@ -233,7 +233,7 @@ func (s *Set) PrintUsage(w io.Writer) {
 	if s.parameters != "" {
 		parts = append(parts, s.parameters)
 	}
-	fmt.Fprintln(w, strings.Join(parts, " "))
+	fmt.Fprint(w, strings.Join(parts, " ")+"\n\n")
 	s.PrintOptions(w)
 }
 
